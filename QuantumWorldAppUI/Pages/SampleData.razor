@@ -1,0 +1,62 @@
+﻿page "/SampleData"
+@inject IBuildingData buildingData
+@inject IResourceData resourceData
+<h3>Sample Data</h3>
+@if (resourcesCreated)
+{
+	<h4>Resources have been created</h4>
+}
+else
+{
+<button class="btn btn-primary" @onclick="CreateResources">Create 	Resources</button>
+}
+@if (buildingsCreated)
+{
+	<h4>Buildings have been created</h4>
+}
+else
+{
+<button class="btn btn-primary" @onclick="CreateBuildings">Create 	Buildings</button>
+}
+
+@code {
+	private bool resourcesCreated = false;
+	private bool buildingsCreated = false;
+
+	private async Task CreateResources()
+	{
+		var resources = await resourceData.GetAllResources();
+		if (resources?.Count > 0)
+		{
+			return;
+		}
+		ResourceModel resource = new()
+		{
+			ResourceName = "TestResource",
+			ResourceValue = 100,
+			ResourceMultiplier = 10
+		};
+		await resourceData.CreateResource(resource);
+		resourcesCreated = true;
+	}
+	private async Task CreateBuildings()
+	{
+		var buildings = await buildingData.GetAllBuildings();
+		if (buildings?.Count > 0)
+		{
+			return;
+		}
+
+		BuildingModel building = new()
+			{
+				BuildingName = "TestBuilding",
+				BuildingDescription = "Testing",
+				BuildingTimeToBuild = 2,
+				BuildingCost = 100,
+				ApprovedToBuild = false
+			};
+
+		await buildingData.CreateBuilding(building);
+		buildingsCreated = true;
+	}
+}

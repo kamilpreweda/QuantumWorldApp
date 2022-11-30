@@ -10,6 +10,6 @@ namespace QuantumWorldAppLibrary.Models;
    public string BuildingDescription { get; set; }
    public int BuildingLevel { get; set; }
    public int BuildingTimeToBuild { get; set; }
-   public List<ResourceModel> BuildingCost { get; set; } = new();
+   public int BuildingCost { get; set; }
    public bool ApprovedToBuild { get; set; } = false;
 }
