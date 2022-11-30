@@ -1,6 +1,7 @@
-﻿page "/SampleData"
+﻿@page "/SampleData"
 @inject IBuildingData buildingData
 @inject IResourceData resourceData
+@inject IUserData userData
 <h3>Sample Data</h3>
 @if (resourcesCreated)
 {
@@ -19,9 +20,34 @@ else
 <button class="btn btn-primary" @onclick="CreateBuildings">Create 	Buildings</button>
 }
 
+<button class="btn btn-danger" @onclick="GenerateSampleData">Generate Sample Data</button>
+
 @code {
 	private bool resourcesCreated = false;
 	private bool buildingsCreated = false;
+
+	private async Task GenerateSampleData()
+	{
+		var foundBuildings = await buildingData.GetAllBuildings();
+		var foundResources = await resourceData.GetAllResources();
+
+		UserModel user = new()
+			{
+				FirstName = "Kamil",
+				LastName = "Preweda",
+				EmailAddress = "kamil@test.com",
+				DisplayName = "Sample 2 Kamil Preweda",
+				ObjectIdentifier = "abc-123",
+				Points = 100,
+				Buildings = foundBuildings,
+				Resources = foundResources
+	};
+	await userData.CreateUser(user);
+	var foundUser = await userData.GetUserFromAuthentication("abc-123");
+	var resources  = await resourceData.GetAllResources();
+	var buildings = await buildingData.GetAllBuildings();
+}
+
 
 	private async Task CreateResources()
 	{
@@ -32,9 +58,9 @@ else
 		}
 		ResourceModel resource = new()
 		{
-			ResourceName = "TestResource",
-			ResourceValue = 100,
-			ResourceMultiplier = 10
+			ResourceName = "2 TestResource",
+			ResourceValue = 500,
+			ResourceMultiplier = 50
 		};
 		await resourceData.CreateResource(resource);
 		resourcesCreated = true;
@@ -49,10 +75,10 @@ else
 
 		BuildingModel building = new()
 			{
-				BuildingName = "TestBuilding",
-				BuildingDescription = "Testing",
-				BuildingTimeToBuild = 2,
-				BuildingCost = 100,
+				BuildingName = "2 TestBuilding",
+				BuildingDescription = "2 Testing",
+				BuildingTimeToBuild = 4,
+				BuildingCost = 200,
 				ApprovedToBuild = false
 			};
 
